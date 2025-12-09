@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi Siswa - Smart Catalyst</title>
+    <!-- FAVICON BASIC - PASTI BERFUNGSI -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- UNTUK BROWSER MODERN -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    
+    <!-- UNTUK APPLE DEVICES -->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    
+    <!-- MANIFEST -->
+    <link rel="manifest" href="site.webmanifest">
+    
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .mata-pelajaran-section {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .mata-pelajaran-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .jenjang-box {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .jenjang-title {
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .checkbox-group-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.3rem 0;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .lainnya-container {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff3cd;
+            border-radius: 5px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .preferensi-tutor-box {
+            background: #f0f9ff;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .form-section-divider {
+            margin: 2rem 0;
+            border: none;
+            border-top: 2px solid var(--light-gray);
+        }
+
+        .suggestion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .suggestion-tag {
+            background: #e2e8f0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-tag:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+    
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="Logo.png" alt="Smart Catalyst" class="logo-img">
+                </a>
+            </div>
+            
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+            
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Beranda</a></li>
+                <li><a href="program.html" class="nav-link">Program</a></li>
+                <li><a href="promo.html" class="nav-link">Promo</a></li>
+                <li><a href="testimoni.html" class="nav-link">Testimoni</a></li>
+                <li><a href="karir.html" class="nav-link">Karir</a></li>
+                <li><a href="registrasi.html" class="nav-link cta-button active">Daftar Sekarang</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" style="padding-top: 80px;">
+        <section class="form-container">
+            <div class="text-center mb-2">
+                <h1 class="section-title">Form Pendaftaran Siswa</h1>
+                <p>Isi form berikut untuk bergabung dengan Smart Catalyst</p>
+            </div>
+
+            <div class="form-card">
+                <!-- Program Selection -->
+                <div class="form-group">
+                    <label class="form-label">Pilih Program *</label>
+                    <select class="form-select" id="programSelect" name="program_daftar" required>
+                        <option value="">Pilih Program...</option>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
+
+                <!-- Auto Select Feedback -->
+                <div id="autoSelectFeedback" class="hidden" style="margin: 1rem 0; padding: 1rem; background: #e8f5e8; border-radius: 5px; border-left: 4px solid var(--primary-green);">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--primary-green);">✅</span>
+                        <div>
+                            <strong>Program telah dipilih otomatis:</strong>
+                            <span id="selectedProgramName" style="color: var(--primary-blue);"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Initial State Message -->
+                <div id="initialMessage" class="text-center">
+                    <p style="color: #666; font-style: italic;">
+                        Silakan pilih program terlebih dahulu untuk menampilkan form pendaftaran yang sesuai.
+                    </p>
+                </div>
+
+                <!-- Private Student Form -->
+                <div id="privateForm" class="hidden">
+                    <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; border-bottom: 2px solid var(--light-gray); padding-bottom: 0.5rem;">
+                        Data Siswa (Private)
+                    </h3>
+                    
+                    <form id="privateRegistrationForm">
+                        <!-- Data Pribadi Siswa -->
+                        <div class="form-section">
+                            <h4 style="color: var(--primary-blue); margin-bottom: 1rem;">👤 Data Pribadi Siswa</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Nama Lengkap Siswa *</label>
+                                <input type="text" class="form-input" name="nama_siswa" required placeholder="Masukkan nama lengkap siswa">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Jenis Kelamin *</label>
+                                <select class="form-select" name="jenis_kelamin" required>
+                                    <option value="">Pilih Jenis Kelamin</option>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Alamat Lengkap *</label>
+                                <textarea class="form-textarea" name="alamat" required placeholder="Alamat lengkap tempat tinggal"></textarea>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Tempat Lahir *</label>
+                                    <input type="text" class="form-input" name="tempat_lahir" required placeholder="Kota tempat lahir">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Tanggal Lahir *</label>
+                                    <input type="date" class="form-input" name="tanggal_lahir" required>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Jenjang Pendidikan *</label>
+                                    <select class="form-select" name="jenjang" id="private_jenjang" required>
+                                        <option value="">Pilih Jenjang</option>
+                                        <option value="SD">SD</option>
+                                        <option value="SMP">SMP</option>
+                                        <option value="SMA">SMA</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Kelas *</label>
+                                    <select class="form-select" name="kelas" id="private_kelas" required>
+                                        <option value="">Pilih Kelas</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Nama Sekolah *</label>
+                                <input type="text" class="form-input" name="asal_sekolah" required placeholder="Contoh: SD Negeri 1 Pringsewu, SMP Negeri 2 Pringsewu, dll.">
+                            </div>
+                        </div>
+
+                        <hr class="form-section-divider">
+
+                        <!-- Mata Pelajaran -->
+                        <div class="mata-pelajaran-section">
+                            <h4 style="color: var(--primary-blue); margin-bottom: 1rem;">📚 Mata Pelajaran yang Ingin Dibimbing *</h4>
+                            
+                            <div class="mata-pelajaran-grid">
+                                <!-- CALISTUNG -->
+                                <div class="jenjang-box">
+                                    <div class="jenjang-title">📖 Calistung</div>
+                                    <div class="checkbox-group-vertical">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Membaca"> Membaca
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Menulis"> Menulis
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Berhitung"> Berhitung
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- SD -->
+                                <div class="jenjang-box">
+                                    <div class="jenjang-title">🎒 SD</div>
+                                    <div class="checkbox-group-vertical">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Matematika SD"> Matematika
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="IPA SD"> IPA
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Bahasa Indonesia SD"> Bahasa Indonesia
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Bahasa Inggris SD"> Bahasa Inggris
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="IPS SD"> IPS
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="PKN SD"> PKN
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- SMP -->
+                                <div class="jenjang-box">
+                                    <div class="jenjang-title">🎓 SMP</div>
+                                    <div class="checkbox-group-vertical">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Matematika SMP"> Matematika
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="IPA SMP"> IPA
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Bahasa Indonesia SMP"> Bahasa Indonesia
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Bahasa Inggris SMP"> Bahasa Inggris
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="IPS SMP"> IPS
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="PPKN SMP"> PPKN
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- SMA -->
+                                <div class="jenjang-box">
+                                    <div class="jenjang-title">🎓 SMA</div>
+                                    <div class="checkbox-group-vertical">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Matematika SMA"> Matematika
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Fisika"> Fisika
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Kimia"> Kimia
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Biologi"> Biologi
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Bahasa Indonesia SMA"> Bahasa Indonesia
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Bahasa Inggris SMA"> Bahasa Inggris
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Ekonomi"> Ekonomi
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Sejarah"> Sejarah
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Geografi"> Geografi
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="mata_pelajaran" value="Sosiologi"> Sosiologi
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Opsi Lainnya -->
+                            <div class="checkbox-label" style="margin-bottom: 1rem;">
+                                <input type="checkbox" id="mata_pelajaran_lainnya" name="mata_pelajaran" value="other">
+                                <span style="font-weight: 600;">Lainnya (tulis manual)</span>
+                            </div>
+
+                            <div id="mata_pelajaran_lainnya_container" class="lainnya-container" style="display: none;">
+                                <label class="form-label">Tulis Mata Pelajaran Lainnya</label>
+                                <input type="text" id="mata_pelajaran_lainnya_input" class="form-input" 
+                                       placeholder="Contoh: Seni Budaya, Prakarya, Bahasa Arab, dll.">
+                                <small style="color: #666;">Pisahkan dengan koma jika lebih dari satu</small>
+                            </div>
+                        </div>
+
+                        <hr class="form-section-divider">
+
+                        <!-- Kesulitan Belajar & Preferensi -->
+                        <div class="form-section">
+                            <h4 style="color: var(--primary-blue); margin-bottom: 1rem;">🎯 Kebutuhan Belajar</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Kesulitan Belajar Saat Ini *</label>
+                                <textarea class="form-textarea" name="kesulitan_belajar" required 
+                                        placeholder="Jelaskan kesulitan belajar yang dialami saat ini. Contoh:
+- Sulit memahami konsep matematika dasar
+- Kesulitan menghafal rumus-rumus fisika
+- Tidak percaya diri dalam berbicara bahasa Inggris
+- Nilai ulangan sering rendah
+- Sulit berkonsentrasi saat belajar
+- dll."></textarea>
+                            </div>
+
+                            <!-- PREFERENSI TUTOR - TEXT BOX -->
+                            <div class="preferensi-tutor-box">
+                                <div class="form-group">
+                                    <label class="form-label">Preferensi Tutor (Opsional)</label>
+                                    <input type="text" class="form-input" name="prefrensi_tutor" 
+                                           placeholder="Contoh: Tutor laki-laki yang berpengalaman, Tutor perempuan yang sabar, dll.">
+                                    <small style="color: var(--medium-gray);">
+                                        Tulis preferensi khusus untuk tutor jika ada. Biarkan kosong jika tidak ada preferensi.
+                                    </small>
+                                    
+                                    <!-- Suggestion Tags -->
+                                    <div class="suggestion-tags">
+                                        <span class="suggestion-tag" onclick="addPreferensiSuggestion('Tutor laki-laki')">Tutor laki-laki</span>
+                                        <span class="suggestion-tag" onclick="addPreferensiSuggestion('Tutor perempuan')">Tutor perempuan</span>
+                                        <span class="suggestion-tag" onclick="addPreferensiSuggestion('Tutor berpengalaman')">Tutor berpengalaman</span>
+                                        <span class="suggestion-tag" onclick="addPreferensiSuggestion('Tutor sabar dan penyayang')">Tutor sabar</span>
+                                        <span class="suggestion-tag" onclick="addPreferensiSuggestion('Tutor yang menguasai materi sulit')">Ahli materi sulit</span>
+                                        <span class="suggestion-tag" onclick="addPreferensiSuggestion('Tutor yang humoris')">Tutor humoris</span>
+                                        <span class="suggestion-tag" onclick="addPreferensiSuggestion('Tutor yang disiplin')">Tutor disiplin</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="form-section-divider">
+
+                        <!-- Data Orang Tua -->
+                        <div class="form-section">
+                            <h4 style="color: var(--primary-green); margin-bottom: 1rem;">👨‍👩‍👧‍👦 Data Orang Tua</h4>
+
+                            <div class="form-group">
+                                <label class="form-label">Nama Orang Tua *</label>
+                                <input type="text" class="form-input" name="nama_ortu" required placeholder="Nama lengkap orang tua">
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Nomor HP Orang Tua *</label>
+                                    <input type="tel" class="form-input" name="no_hp_ortu" required placeholder="Contoh: 081234567890">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Pekerjaan Orang Tua</label>
+                                    <input type="text" class="form-input" name="pekerjaan_ortu" placeholder="Pekerjaan orang tua">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="form-section-divider">
+
+                        <!-- Jadwal Belajar -->
+                        <div class="form-section">
+                            <h4 style="color: var(--primary-orange); margin-bottom: 1rem;">🕒 Jadwal Belajar</h4>
+
+                            <div class="form-group">
+                                <label class="form-label">Hari Belajar *</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="jadwal_hari" value="Senin"> Senin
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="jadwal_hari" value="Selasa"> Selasa
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="jadwal_hari" value="Rabu"> Rabu
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="jadwal_hari" value="Kamis"> Kamis
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="jadwal_hari" value="Jumat"> Jumat
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="jadwal_hari" value="Sabtu"> Sabtu
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="jadwal_hari" value="Minggu"> Minggu
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Jam Belajar *</label>
+                                
+                                <select class="form-select" id="private_jam_select" name="jadwal_jam_select" onchange="handleSimpleJamSelection(this, 'private')">
+                                    <option value="">Pilih Jam</option>
+                                    <option value="08:00-09:30">08:00 - 09:30</option>
+                                    <option value="10:00-11:30">10:00 - 11:30</option>
+                                    <option value="13:00-14:30">13:00 - 14:30</option>
+                                    <option value="15:00-16:30">15:00 - 16:30</option>
+                                    <option value="17:00-18:30">17:00 - 18:30</option>
+                                    <option value="19:00-20:30">19:00 - 20:30</option>
+                                    <option value="other">Lainnya (tulis di catatan)</option>
+                                </select>
+                                
+                                <div id="private_jam_catatan_container" style="display: none; margin-top: 1rem;">
+                                    <label class="form-label">Catatan Jam Khusus</label>
+                                    <input type="text" id="private_jam_catatan" name="jam_catatan" class="form-input" 
+                                           placeholder="Contoh: 16.00 - 17.00"
+                                           oninput="updateCustomJam('private')">
+                                </div>
+                                
+                                <input type="hidden" id="private_jadwal_jam" name="jadwal_jam" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-block" style="margin-top: 2rem;">
+                            📨 Submit Pendaftaran
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Group Registration Form -->
+                <div id="groupForm" class="hidden">
+                    <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; border-bottom: 2px solid var(--light-gray); padding-bottom: 0.5rem;">
+                        Data Kelompok Belajar
+                    </h3>
+                    
+                    <form id="groupRegistrationForm">
+                        <div class="form-group">
+                            <label class="form-label">Nama Perwakilan *</label>
+                            <input type="text" class="form-input" name="nama_perwakilan" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Asal Sekolah *</label>
+                            <input type="text" class="form-input" name="asal_sekolah" required>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Jenjang *</label>
+                                <select class="form-select" name="jenjang" id="group_jenjang" required>
+                                    <option value="">Pilih Jenjang</option>
+                                    <option value="SD">SD</option>
+                                    <option value="SMP">SMP</option>
+                                    <option value="SMA">SMA</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Kelas *</label>
+                                <select class="form-select" name="kelas" id="group_kelas" required>
+                                    <option value="">Pilih Kelas</option>
+                                    <option value="1">Kelas 1</option>
+                                    <option value="2">Kelas 2</option>
+                                    <option value="3">Kelas 3</option>
+                                    <option value="4">Kelas 4</option>
+                                    <option value="5">Kelas 5</option>
+                                    <option value="6">Kelas 6</option>
+                                    <option value="7">Kelas 7</option>
+                                    <option value="8">Kelas 8</option>
+                                    <option value="9">Kelas 9</option>
+                                    <option value="10">Kelas 10</option>
+                                    <option value="11">Kelas 11</option>
+                                    <option value="12">Kelas 12</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Jumlah Siswa *</label>
+                                <input type="number" class="form-input" name="jumlah_siswa" min="2" max="20" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Nomor HP Perwakilan *</label>
+                                <input type="tel" class="form-input" name="no_hp_perwakilan" required>
+                            </div>
+                        </div>
+
+                        <h4 style="color: var(--primary-orange); margin: 2rem 0 1rem 0;">Jadwal Belajar</h4>
+
+                        <div class="form-group">
+                            <label class="form-label">Hari Belajar *</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="jadwal_hari" value="Senin"> Senin
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="jadwal_hari" value="Selasa"> Selasa
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="jadwal_hari" value="Rabu"> Rabu
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="jadwal_hari" value="Kamis"> Kamis
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="jadwal_hari" value="Jumat"> Jumat
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="jadwal_hari" value="Sabtu"> Sabtu
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="jadwal_hari" value="Minggu"> Minggu
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Jam Belajar *</label>
+                            
+                            <select class="form-select" id="group_jam_select" name="jadwal_jam_select" onchange="handleSimpleJamSelection(this, 'group')">
+                                <option value="">Pilih Jam</option>
+                                <option value="08:00-09:30">08:00 - 09:30</option>
+                                <option value="10:00-11:30">10:00 - 11:30</option>
+                                <option value="13:00-14:30">13:00 - 14:30</option>
+                                <option value="15:00-16:30">15:00 - 16:30</option>
+                                <option value="17:00-18:30">17:00 - 18:30</option>
+                                <option value="19:00-20:30">19:00 - 20:30</option>
+                                <option value="other">Lainnya (tulis di catatan)</option>
+                            </select>
+                            
+                            <div id="group_jam_catatan_container" style="display: none; margin-top: 1rem;">
+                                <label class="form-label">Catatan Jam Khusus</label>
+                                <input type="text" id="group_jam_catatan" name="jam_catatan" class="form-input" 
+                                       placeholder="Contoh: 16.00 - 17.00."
+                                       oninput="updateCustomJam('group')">
+                            </div>
+                            
+                            <input type="hidden" id="group_jadwal_jam" name="jadwal_jam" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-block">
+                            Submit Pendaftaran Group
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Smart Catalyst</h3>
+                <p>Lembaga bimbingan belajar profesional dengan pengajar berkualitas dan metode pembelajaran yang menyenangkan. efektif, dan mendalam</p>
+            </div>
+            <div class="footer-section">
+                <h3>Kontak Kami</h3>
+                <div class="contact-item">
+                    <img src="LOGO_WA.png" alt="WhatsApp" class="contact-logo">
+                    <a href="https://wa.me/6285180649460" target="_blank" class="contact-link">
+                        WhatsApp
+                    </a>
+                </div>
+                <div class="contact-item">
+                    <img src="LOGO_IG.png" alt="Instagram" class="contact-logo">
+                    <a href="https://instagram.com/smart_catalyst.psw" target="_blank" class="contact-link">
+                        Instagram
+                    </a>
+                </div>
+                <div class="contact-item">
+                    <img src="LOGO_EMAIL.png" alt="Email" class="contact-logo">
+                    <a href="mailto:smartcatalyst.official@gmail.com" class="contact-link">
+                        Email
+                    </a>
+                </div>
+                <div class="contact-item">
+                    <img src="LOGO_GMAPS.png" alt="Email" class="contact-logo">
+                    <span class="contact-text">Pringsewu Selatan, Pringsewu, Lampung</span>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Link Cepat</h3>
+                <p><a href="program.html">Program Belajar</a></p>
+                <p><a href="promo.html">Promo Terbaru</a></p>
+                <p><a href="testimoni.html">Testimoni</a></p>
+                <p><a href="registrasi.html">Pendaftaran</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Smart Catalyst. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script-prod.js"></script>
+    <script>
+        // Fungsi untuk menangani pilihan "Lainnya" pada mata pelajaran
+        document.addEventListener('DOMContentLoaded', function() {
+            const lainnyaCheckbox = document.getElementById('mata_pelajaran_lainnya');
+            const lainnyaContainer = document.getElementById('mata_pelajaran_lainnya_container');
+            const lainnyaInput = document.getElementById('mata_pelajaran_lainnya_input');
+
+            if (lainnyaCheckbox && lainnyaContainer) {
+                lainnyaCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        lainnyaContainer.style.display = 'block';
+                        lainnyaInput.required = true;
+                    } else {
+                        lainnyaContainer.style.display = 'none';
+                        lainnyaInput.required = false;
+                        lainnyaInput.value = '';
+                    }
+                });
+            }
+
+            // Event listener untuk form submission - menangani mata pelajaran lainnya
+            const privateForm = document.getElementById('privateRegistrationForm');
+            if (privateForm) {
+                privateForm.addEventListener('submit', function(e) {
+                    handleMataPelajaranLainnya();
+                });
+            }
+        });
+
+        // Fungsi untuk menambahkan suggestion ke preferensi tutor
+        function addPreferensiSuggestion(text) {
+            const preferensiInput = document.querySelector('input[name="prefrensi_tutor"]');
+            const currentValue = preferensiInput.value.trim();
+            
+            if (currentValue === '') {
+                preferensiInput.value = text;
+            } else {
+                // Jika sudah ada nilai, tambahkan dengan koma
+                const suggestions = currentValue.split(',').map(s => s.trim());
+                if (!suggestions.includes(text)) {
+                    preferensiInput.value = currentValue + ', ' + text;
+                }
+            }
+            
+            // Focus ke input
+            preferensiInput.focus();
+        }
+
+        function handleMataPelajaranLainnya() {
+            const lainnyaCheckbox = document.getElementById('mata_pelajaran_lainnya');
+            const lainnyaInput = document.getElementById('mata_pelajaran_lainnya_input');
+            
+            if (lainnyaCheckbox && lainnyaCheckbox.checked && lainnyaInput.value.trim() !== '') {
+                // Hapus value "other" dan ganti dengan nilai dari input
+                lainnyaCheckbox.value = lainnyaInput.value.trim();
+            }
+        }
+
+        // Fungsi untuk validasi minimal satu mata pelajaran terpilih
+        function validateMataPelajaran() {
+            const checkboxes = document.querySelectorAll('input[name="mata_pelajaran"]:checked');
+            const lainnyaCheckbox = document.getElementById('mata_pelajaran_lainnya');
+            const lainnyaInput = document.getElementById('mata_pelajaran_lainnya_input');
+            
+            if (checkboxes.length === 0) {
+                showError('Pilih minimal satu mata pelajaran');
+                return false;
+            }
+            
+            // Validasi jika "Lainnya" dipilih tapi tidak diisi
+            if (lainnyaCheckbox && lainnyaCheckbox.checked && (!lainnyaInput || lainnyaInput.value.trim() === '')) {
+                showError('Silakan tulis mata pelajaran lainnya');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Update fungsi handlePrivateRegistration di script-prod.js untuk include validasi mata pelajaran
+        // Tambahkan ini di awal fungsi handlePrivateRegistration sebelum validasi lainnya
+        // if (!validateMataPelajaran()) return;
+    </script>
+</body>
+</html>
