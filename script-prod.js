@@ -1,4 +1,4 @@
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWoUq72t3BalXetnmiQU71V4gZeMPWGcNWE_I1GErpotdy86UslUde8rj00sSNFG1Tyw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzwLmvgUl3qxWcp5-e46vHGsIn1NDJGzdFDB16DDWlnAQIAvzksc6GnxjjVp4qVksYCMg/exec';
 
 const CACHE_CONFIG = {
     DURATIONS: {
@@ -3782,6 +3782,7 @@ PerformanceTracker.end('homepage_loading');
 
 window.CacheManager = CacheManager;
 window.ProgressManager = ProgressManager;
+
 
 
 
