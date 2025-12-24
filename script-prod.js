@@ -1350,7 +1350,7 @@ function renderProgramDetailContent(program, programPromo, finalPrice) {
                                     <span style="color: var(--medium-gray);">${durasi}</span>
                                 </div>
                                 <div>
-                                    <strong style="color: var(--primary-blue); font-size: 0.9rem;">🕐 Contoh Jadwal:</strong>
+                                    <strong style="color: var(--primary-blue); font-size: 0.9rem;">🕐 Jadwal:</strong>
                                     <span style="color: var(--medium-gray);">${jadwalContoh}</span>
                                 </div>
                                 <div>
@@ -3782,6 +3782,7 @@ PerformanceTracker.end('homepage_loading');
 
 window.CacheManager = CacheManager;
 window.ProgressManager = ProgressManager;
+
 
 
 
